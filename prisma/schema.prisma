@@ -1,0 +1,163 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  WORKER
+  WARDEN
+  COORDINATOR
+}
+
+enum Priority {
+  LOW
+  NORMAL
+  HIGH
+  EMERGENCY
+}
+
+enum ComplaintStatus {
+  LOGGED
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  REOPENED
+  ESCALATED
+  CLOSED
+}
+
+enum AttachmentType {
+  IMAGE_JPEG
+  IMAGE_PNG
+  VIDEO_MP4
+}
+
+model User {
+  id                String         @id @default(cuid())
+  name              String
+  email             String         @unique
+  passwordHash      String?
+  phone             String?
+  role              Role           @default(STUDENT)
+  blockAssigned     String?
+  roomNumber        String?
+  categoryExpertise String?
+  isAvailable       Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  createdComplaints Complaint[]    @relation("StudentComplaints")
+  assignedTasks     Complaint[]    @relation("WorkerComplaints")
+  auditLogs         AuditLog[]
+  messages          ChatMessage[]
+}
+
+model Category {
+  id            String        @id @default(cuid())
+  name          String        @unique
+  subCategories SubCategory[]
+}
+
+model SubCategory {
+  id              String      @id @default(cuid())
+  categoryId      String
+  name            String
+  defaultTATHours Int         @default(24)
+  category        Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  complaints      Complaint[]
+}
+
+model Complaint {
+  id              String          @id @default(cuid())
+  complaintRefId  String          @unique
+  studentId       String
+  workerId        String?
+  subCategoryId   String
+  location        String
+  description     String
+  priority        Priority        @default(NORMAL)
+  status          ComplaintStatus @default(LOGGED)
+  emergencyFlag   Boolean         @default(false)
+  recurringFlag   Boolean         @default(false)
+  isEscalated     Boolean         @default(false)
+  
+  tatDeadline     DateTime
+  resolvedAt      DateTime?
+  closedAt        DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  resolutionNotes String?
+  
+  student         User            @relation("StudentComplaints", fields: [studentId], references: [id])
+  worker          User?           @relation("WorkerComplaints", fields: [workerId], references: [id])
+  subCategory     SubCategory     @relation(fields: [subCategoryId], references: [id])
+  attachments     Attachment[]
+  feedback        Feedback?
+  auditLogs       AuditLog[]
+  messages        ChatMessage[]
+
+  @@index([status, priority])
+  @@index([studentId])
+  @@index([workerId])
+}
+
+model Attachment {
+  id                String         @id @default(cuid())
+  complaintId       String
+  fileUrl           String
+  fileType          AttachmentType
+  isResolutionProof Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+
+  complaint         Complaint      @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+}
+
+model Feedback {
+  id             String    @id @default(cuid())
+  complaintId    String    @unique
+  starRating     Int
+  comments       String?
+  issuePersists  Boolean   @default(false)
+  submittedAt    DateTime  @default(now())
+
+  complaint      Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  complaintId String
+  userId      String?
+  actionTaken String
+  timestamp   DateTime  @default(now())
+  metadata    Json?
+
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [id])
+}
+
+model ChatMessage {
+  id          String    @id @default(cuid())
+  complaintId String
+  senderId    String
+  message     String
+  isInternal  Boolean   @default(false)
+  sentAt      DateTime  @default(now())
+
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  sender      User      @relation(fields: [senderId], references: [id])
+}
+
+model SystemSetting {
+  id                    String   @id @default("default")
+  blackoutStart         String   @default("22:00")
+  blackoutEnd           String   @default("06:00")
+  emergencyTimeoutMin   Int      @default(30)
+  autoCloseTimeoutHours Int      @default(48)
+}
