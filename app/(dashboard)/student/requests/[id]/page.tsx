@@ -511,16 +511,12 @@ async function TicketDetailContent({ id }: { id: string }) {
   );
 }
 
+import { TicketDetailSkeleton } from "@/components/ui/skeleton";
+
 export default async function TicketDetailPage({ params }: PageProps) {
   const { id } = await params;
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400">
-          Loading complaint details...
-        </div>
-      }
-    >
+    <Suspense fallback={<TicketDetailSkeleton />}>
       <TicketDetailContent id={id} />
     </Suspense>
   );

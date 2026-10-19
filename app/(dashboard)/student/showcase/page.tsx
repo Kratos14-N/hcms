@@ -193,10 +193,27 @@ async function RepairsGrid() {
   );
 }
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 function GridSkeletonFallback() {
   return (
-    <div className="py-24 text-center bg-white rounded-[28px] border border-[#e5e5ea] text-sm text-[#86868b] animate-pulse">
-      Loading verified evidence gallery...
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <div key={i} className="bg-white rounded-3xl border border-slate-200/80 p-4 space-y-3 shadow-xs">
+          <Skeleton className="h-48 w-full rounded-2xl" />
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-5 w-24 rounded-full" />
+              <Skeleton className="h-4 w-16 rounded" />
+            </div>
+            <Skeleton className="h-5 w-3/4 rounded-md" />
+            <div className="flex items-center gap-2 pt-1">
+              <Skeleton className="w-6 h-6 rounded-full" />
+              <Skeleton className="h-3 w-28 rounded" />
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

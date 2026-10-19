@@ -181,17 +181,11 @@ async function AnalyticsContent() {
   );
 }
 
-function AnalyticsFallback() {
-  return (
-    <div className="min-h-screen bg-[#fbfbfd] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-[#86868b] dark:text-slate-400">
-      Compiling facility telemetry...
-    </div>
-  );
-}
+import { AnalyticsSkeleton } from "@/components/ui/skeleton";
 
 export default function AnalyticsPage() {
   return (
-    <Suspense fallback={<AnalyticsFallback />}>
+    <Suspense fallback={<AnalyticsSkeleton />}>
       <AnalyticsContent />
     </Suspense>
   );

@@ -251,15 +251,11 @@ async function WorkerTicketDetailContent({
   );
 }
 
+import { TicketDetailSkeleton } from "@/components/ui/skeleton";
+
 export default function WorkerTicketDetailPage(props: PageProps) {
   return (
-    <Suspense
-      fallback={
-        <div className="p-8 text-center text-xs text-slate-400">
-          Loading ticket details...
-        </div>
-      }
-    >
+    <Suspense fallback={<TicketDetailSkeleton />}>
       <WorkerTicketDetailContent params={props.params} />
     </Suspense>
   );

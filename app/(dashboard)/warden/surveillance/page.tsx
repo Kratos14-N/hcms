@@ -179,17 +179,11 @@ async function SurveillanceContent() {
   );
 }
 
-function SurveillanceFallback() {
-  return (
-    <div className="min-h-screen bg-[#fbfbfd] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-[#86868b] dark:text-slate-400">
-      Syncing live incident queues...
-    </div>
-  );
-}
+import { SurveillanceSkeleton } from "@/components/ui/skeleton";
 
 export default function SurveillancePage() {
   return (
-    <Suspense fallback={<SurveillanceFallback />}>
+    <Suspense fallback={<SurveillanceSkeleton />}>
       <SurveillanceContent />
     </Suspense>
   );

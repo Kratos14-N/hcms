@@ -273,15 +273,11 @@ async function NewRequestFormContent() {
   );
 }
 
+import { TicketFormSkeleton } from "@/components/ui/skeleton";
+
 export default function NewRequestPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400">
-          Loading ticket lodging desk...
-        </div>
-      }
-    >
+    <Suspense fallback={<TicketFormSkeleton />}>
       <NewRequestFormContent />
     </Suspense>
   );

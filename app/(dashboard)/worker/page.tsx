@@ -569,15 +569,11 @@ async function WorkerPortfolioContent() {
   );
 }
 
+import WorkerLoading from "./loading";
+
 export default async function WorkerPortfolioPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400">
-          Loading staff portfolios...
-        </div>
-      }
-    >
+    <Suspense fallback={<WorkerLoading />}>
       <WorkerPortfolioContent />
     </Suspense>
   );

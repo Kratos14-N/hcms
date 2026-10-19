@@ -314,15 +314,11 @@ async function AgentQueueContent({
   );
 }
 
+import CoordinatorLoading from "./loading";
+
 export default async function AgentPage(props: PageProps) {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400 dark:text-slate-500">
-          Loading operations triage desk...
-        </div>
-      }
-    >
+    <Suspense fallback={<CoordinatorLoading />}>
       <AgentQueueContent searchParams={props.searchParams} />
     </Suspense>
   );

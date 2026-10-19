@@ -1,2 +1,5 @@
-// app/(dashboard)/warden/loading.tsx
-export { default } from "../agent/loading";
+import AgentLoading from "../agent/loading";
+
+export default function WardenLoading() {
+  return <AgentLoading />;
+}

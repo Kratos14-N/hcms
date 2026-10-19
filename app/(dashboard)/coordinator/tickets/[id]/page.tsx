@@ -269,17 +269,11 @@ async function AgentTicketDetailContent({
   );
 }
 
-function TicketLoadingFallback() {
-  return (
-    <div className="p-8 text-center text-xs text-slate-400 dark:text-slate-500">
-      Loading ticket details...
-    </div>
-  );
-}
+import { TicketDetailSkeleton } from "@/components/ui/skeleton";
 
 export default function AgentTicketDetailPage(props: PageProps) {
   return (
-    <Suspense fallback={<TicketLoadingFallback />}>
+    <Suspense fallback={<TicketDetailSkeleton />}>
       <AgentTicketDetailContent params={props.params} />
     </Suspense>
   );

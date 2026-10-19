@@ -1,2 +1,5 @@
-// app/(dashboard)/student/loading.tsx
-export { default } from "../portal/loading";
+import PortalLoading from "../portal/loading";
+
+export default function StudentLoading() {
+  return <PortalLoading />;
+}

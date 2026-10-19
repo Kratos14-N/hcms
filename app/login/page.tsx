@@ -24,6 +24,8 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import PortalLoading from "../(dashboard)/portal/loading";
 import AgentLoading from "../(dashboard)/agent/loading";
+import WorkerLoading from "../(dashboard)/worker/loading";
+import CoordinatorLoading from "../(dashboard)/coordinator/loading";
 
 type RoleType = "STUDENT" | "WARDEN" | "WORKER" | "COORDINATOR";
 
@@ -287,7 +289,15 @@ export default function LoginPage() {
         </header>
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {isWarden ? <AgentLoading /> : <PortalLoading />}
+          {transitionRole === "WARDEN" ? (
+            <AgentLoading />
+          ) : transitionRole === "WORKER" ? (
+            <WorkerLoading />
+          ) : transitionRole === "COORDINATOR" ? (
+            <CoordinatorLoading />
+          ) : (
+            <PortalLoading />
+          )}
         </main>
       </div>
     );
