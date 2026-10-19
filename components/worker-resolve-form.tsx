@@ -58,17 +58,17 @@ export function WorkerResolveForm({ complaintId, workerId }: WorkerResolveFormPr
 
   if (success) {
     return (
-      <div className="w-full py-3 px-4 rounded-xl text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 flex items-center justify-center gap-2">
-        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+      <div className="w-full py-3 px-4 rounded-xl text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 flex items-center justify-center gap-2">
+        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
         <span>Work Order Completed! Student Notified for Handover</span>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleResolve} className="pt-3 border-t border-slate-100 space-y-2.5">
+    <form onSubmit={handleResolve} className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
       <div className="space-y-1">
-        <label className="text-[11px] font-bold text-slate-600 block">
+        <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block">
           Technician Completion Statement:
         </label>
         <input
@@ -77,7 +77,7 @@ export function WorkerResolveForm({ complaintId, workerId }: WorkerResolveFormPr
           onChange={(e) => setResolutionNotes(e.target.value)}
           required
           placeholder="e.g. Replaced capacitor and verified fan working properly."
-          className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+          className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
         />
       </div>
 
@@ -101,7 +101,7 @@ export function WorkerResolveForm({ complaintId, workerId }: WorkerResolveFormPr
       </button>
 
       {errorMsg && (
-        <p className="text-[11px] text-rose-600 text-center font-medium">
+        <p className="text-[11px] text-rose-600 dark:text-rose-400 text-center font-medium">
           {errorMsg}
         </p>
       )}

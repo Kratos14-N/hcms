@@ -102,11 +102,11 @@ export function RadarTriageControl({
           onChange={(e) => setWorkerId(e.target.value)}
           disabled={loading}
           aria-label="Dispatch Technician"
-          className="text-xs font-medium px-3 py-2 rounded-xl border border-[#d2d2d7] bg-[#fbfbfd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] transition disabled:opacity-50"
+          className="text-xs font-medium px-3 py-2 rounded-xl border border-[#d2d2d7] dark:border-slate-700 bg-[#fbfbfd] dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0071e3] transition disabled:opacity-50"
         >
-          <option value="">Dispatch Technician...</option>
+          <option value="" className="dark:bg-slate-800 dark:text-white">Dispatch Technician...</option>
           {technicians.map((t) => (
-            <option key={t.id} value={t.id}>
+            <option key={t.id} value={t.id} className="dark:bg-slate-800 dark:text-white">
               {t.name} ({t.categoryExpertise || "Staff"})
             </option>
           ))}
@@ -118,13 +118,13 @@ export function RadarTriageControl({
           onChange={(e) => handleStatusChange(e.target.value as ComplaintStatus)}
           disabled={loading}
           aria-label="Update Complaint Status"
-          className="text-xs font-medium px-3 py-2 rounded-xl border border-[#d2d2d7] bg-[#fbfbfd] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] transition disabled:opacity-50"
+          className="text-xs font-medium px-3 py-2 rounded-xl border border-[#d2d2d7] dark:border-slate-700 bg-[#fbfbfd] dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0071e3] transition disabled:opacity-50"
         >
-          <option value={ComplaintStatus.LOGGED}>LOGGED</option>
-          <option value={ComplaintStatus.ASSIGNED}>ASSIGNED</option>
-          <option value={ComplaintStatus.IN_PROGRESS}>IN PROGRESS</option>
-          <option value={ComplaintStatus.RESOLVED}>RESOLVED</option>
-          <option value={ComplaintStatus.CLOSED}>CLOSED</option>
+          <option value={ComplaintStatus.LOGGED} className="dark:bg-slate-800 dark:text-white">LOGGED</option>
+          <option value={ComplaintStatus.ASSIGNED} className="dark:bg-slate-800 dark:text-white">ASSIGNED</option>
+          <option value={ComplaintStatus.IN_PROGRESS} className="dark:bg-slate-800 dark:text-white">IN PROGRESS</option>
+          <option value={ComplaintStatus.RESOLVED} className="dark:bg-slate-800 dark:text-white">RESOLVED</option>
+          <option value={ComplaintStatus.CLOSED} className="dark:bg-slate-800 dark:text-white">CLOSED</option>
         </select>
 
         {/* Action Button */}
@@ -155,14 +155,14 @@ export function RadarTriageControl({
       {/* Inspect full ticket link */}
       <Link
         href={ticketDetailHref}
-        className="p-2 rounded-xl text-[#86868b] hover:text-[#1d1d1f] hover:bg-[#f5f5f7] transition"
+        className="p-2 rounded-xl text-[#86868b] dark:text-slate-400 hover:text-[#1d1d1f] dark:hover:text-white hover:bg-[#f5f5f7] dark:hover:bg-slate-800 transition"
         title="Inspect full ticket"
       >
         <ExternalLink className="w-4 h-4" />
       </Link>
 
       {errorMsg && (
-        <span className="text-[11px] text-rose-600 font-medium">
+        <span className="text-[11px] text-rose-600 dark:text-rose-400 font-medium">
           {errorMsg}
         </span>
       )}

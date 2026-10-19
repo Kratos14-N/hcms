@@ -168,45 +168,45 @@ async function WorkerPortfolioContent() {
 
       {/* Quick Statistics Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+        <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
             Tickets Awaiting Staff
           </span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 mt-1">
+          <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">
             {availableTickets.length}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">Ready for acceptance</p>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Ready for acceptance</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+        <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
             My Appointed Jobs
           </span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 mt-1">
+          <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">
             {myAppointedJobs.length}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">In-progress onsite</p>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">In-progress onsite</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+        <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
             Completed Resolutions
           </span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1">
+          <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
             {myCompletedJobs.length}
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">Verified handovers</p>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Verified handovers</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+        <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
             Resident Rating Score
           </span>
           <div className="text-2xl sm:text-3xl font-extrabold text-amber-500 flex items-center gap-1.5 mt-1">
             <span>{myAvgRating}</span>
             <Star className="w-5 h-5 fill-amber-400 text-amber-400 inline" />
           </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">From student reviews</p>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">From student reviews</p>
         </div>
       </div>
 
@@ -214,24 +214,24 @@ async function WorkerPortfolioContent() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
               <span>Available Problem Tickets (Awaiting Technician)</span>
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Review defect complaints lodged by students. Click accept to claim the work order and get appointed.
             </p>
           </div>
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+          <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">
             {availableTickets.length} Open
           </span>
         </div>
 
         {availableTickets.length === 0 ? (
-          <div className="bg-white rounded-3xl p-10 text-center border border-slate-200/80 text-slate-400 space-y-2">
+          <div className="bg-white dark:bg-[#111726]/90 rounded-3xl p-10 text-center border border-slate-200/80 dark:border-slate-800 text-slate-400 space-y-2">
             <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-            <p className="font-bold text-sm text-slate-700">All student tickets are currently claimed!</p>
-            <p className="text-xs">No pending unassigned complaints in the hostel maintenance pool.</p>
+            <p className="font-bold text-sm text-slate-700 dark:text-slate-300">All student tickets are currently claimed!</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">No pending unassigned complaints in the hostel maintenance pool.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -246,47 +246,47 @@ async function WorkerPortfolioContent() {
               return (
                 <div
                   key={ticket.id}
-                  className={`bg-white rounded-2xl p-5 border transition duration-200 shadow-xs flex flex-col justify-between space-y-4 ${
+                  className={`bg-white dark:bg-[#111726]/90 rounded-2xl p-5 border transition duration-200 shadow-xs flex flex-col justify-between space-y-4 ${
                     isMatch
                       ? "border-amber-400 ring-2 ring-amber-400/20"
-                      : "border-slate-200 hover:border-slate-300"
+                      : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
                   }`}
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                        <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
                           {ticket.complaintRefId}
                         </span>
                         {isEmergency && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50">
                             <Flame className="w-3 h-3 text-rose-600 fill-rose-500" />
                             2-Hour Hazard
                           </span>
                         )}
                         {isMatch && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-300">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
                             ★ Matches Trade ({currentWorker.categoryExpertise})
                           </span>
                         )}
                       </div>
 
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                         {ticket.status.replace("_", " ")}
                       </span>
                     </div>
 
-                    <h3 className="font-bold text-base text-slate-900">
+                    <h3 className="font-bold text-base text-slate-900 dark:text-white">
                       {ticket.subCategory?.category?.name} — {ticket.subCategory?.name}
                     </h3>
 
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
                       {ticket.description}
                     </p>
 
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                        <span className="flex items-center gap-1 text-slate-700 font-semibold">
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-semibold">
                           <MapPin className="w-3.5 h-3.5 text-indigo-500" /> {ticket.location}
                         </span>
                         <span>•</span>
@@ -296,7 +296,7 @@ async function WorkerPortfolioContent() {
                       </div>
                       <Link
                         href={`/worker/tickets/${ticket.id}`}
-                        className="text-xs font-bold text-indigo-600 hover:underline"
+                        className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
                       >
                         Inspect Details &rarr;
                       </Link>
@@ -313,7 +313,7 @@ async function WorkerPortfolioContent() {
                   </div>
 
                   {/* Accept Work Order Button Form */}
-                  <div className="pt-2 border-t border-slate-100">
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                     <WorkerAcceptButton
                       complaintId={ticket.id}
                       workerId={currentWorker.id}
@@ -330,24 +330,24 @@ async function WorkerPortfolioContent() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-              <FileCheck2 className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+              <FileCheck2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
               <span>My Appointed Work Orders ({currentWorker.name})</span>
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Active maintenance tasks claimed by you. Complete repairs and mark resolved to notify the student.
             </p>
           </div>
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+          <span className="text-xs font-bold px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900/50">
             {myAppointedJobs.length} In-Progress
           </span>
         </div>
 
         {myAppointedJobs.length === 0 ? (
-          <div className="bg-white rounded-3xl p-10 text-center border border-slate-200/80 text-slate-400 space-y-2">
+          <div className="bg-white dark:bg-[#111726]/90 rounded-3xl p-10 text-center border border-slate-200/80 dark:border-slate-800 text-slate-400 space-y-2">
             <Inbox className="w-8 h-8 text-slate-400 mx-auto" />
-            <p className="font-bold text-sm text-slate-700">No active work orders appointed to you right now.</p>
-            <p className="text-xs">Claim an open ticket from the pool above to start your repair order.</p>
+            <p className="font-bold text-sm text-slate-700 dark:text-slate-300">No active work orders appointed to you right now.</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">Claim an open ticket from the pool above to start your repair order.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -357,21 +357,21 @@ async function WorkerPortfolioContent() {
               return (
                 <div
                   key={job.id}
-                  className="bg-white rounded-2xl p-5 border border-indigo-200 ring-2 ring-indigo-500/10 shadow-xs flex flex-col justify-between space-y-4"
+                  className="bg-white dark:bg-[#111726]/90 rounded-2xl p-5 border border-indigo-200 dark:border-indigo-900/50 ring-2 ring-indigo-500/10 shadow-xs flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                        <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
                           {job.complaintRefId}
                         </span>
                         {isEmergency && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50">
                             <Flame className="w-3 h-3 text-rose-600 fill-rose-500" />
                             Emergency
                           </span>
                         )}
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">
                           Appointed to You
                         </span>
                       </div>
@@ -384,11 +384,11 @@ async function WorkerPortfolioContent() {
                       </Link>
                     </div>
 
-                    <h3 className="font-bold text-base text-slate-900">
+                    <h3 className="font-bold text-base text-slate-900 dark:text-white">
                       {job.subCategory?.category?.name} — {job.subCategory?.name}
                     </h3>
 
-                    <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
                       {job.description}
                     </p>
 
@@ -415,12 +415,12 @@ async function WorkerPortfolioContent() {
       </div>
 
       {/* 4. SECTION C: Technician Directory & Proof Portfolio Gallery */}
-      <div className="space-y-6 pt-4 border-t border-slate-200/80">
+      <div className="space-y-6 pt-4 border-t border-slate-200/80 dark:border-slate-800">
         <div>
-          <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Campus Technician Directory & Handover Proofs
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Verified staff accounts, contact directories, and resident handover evidence portfolios.
           </p>
         </div>
@@ -456,7 +456,7 @@ async function WorkerPortfolioContent() {
             return (
               <div
                 key={worker.id}
-                className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-6 hover:shadow-md transition duration-200"
+                className="bg-white dark:bg-[#111726]/90 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6 hover:shadow-md transition duration-200"
               >
                 {/* Worker Top Profile */}
                 <div className="flex items-start justify-between gap-4">
@@ -469,10 +469,10 @@ async function WorkerPortfolioContent() {
                         .join("")}
                     </div>
                     <div>
-                      <h3 className="font-bold text-base text-slate-900 leading-tight">
+                      <h3 className="font-bold text-base text-slate-900 dark:text-white leading-tight">
                         {worker.name}
                       </h3>
-                      <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/80 inline-block mt-1">
+                      <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md border border-amber-200/80 dark:border-amber-900/50 inline-block mt-1">
                         {worker.categoryExpertise || "General Maintenance"} Specialist
                       </span>
                     </div>
@@ -480,10 +480,10 @@ async function WorkerPortfolioContent() {
 
                   <div className="text-right">
                     {avgRating ? (
-                      <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-extrabold">
+                      <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-extrabold">
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                         <span>{avgRating}</span>
-                        <span className="text-[10px] text-amber-600 font-normal">
+                        <span className="text-[10px] text-amber-600 dark:text-amber-400 font-normal">
                           ({feedbackRatings.length})
                         </span>
                       </div>
@@ -494,20 +494,20 @@ async function WorkerPortfolioContent() {
                 </div>
 
                 {/* Metrics */}
-                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-center">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">
                       Active
                     </span>
-                    <span className="text-base font-extrabold text-amber-600">
+                    <span className="text-base font-extrabold text-amber-600 dark:text-amber-400">
                       {activeComplaints.length}
                     </span>
                   </div>
-                  <div className="border-x border-slate-200/60">
+                  <div className="border-x border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">
                       Resolved
                     </span>
-                    <span className="text-base font-extrabold text-emerald-600">
+                    <span className="text-base font-extrabold text-emerald-600 dark:text-emerald-400">
                       {resolvedComplaints.length}
                     </span>
                   </div>
@@ -515,7 +515,7 @@ async function WorkerPortfolioContent() {
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">
                       Campus Rating
                     </span>
-                    <span className="text-base font-extrabold text-slate-900">
+                    <span className="text-base font-extrabold text-slate-900 dark:text-white">
                       {avgRating || "5.0"}
                     </span>
                   </div>
@@ -523,13 +523,13 @@ async function WorkerPortfolioContent() {
 
                 {/* Phone Contact */}
                 {worker.phone && (
-                  <div className="flex items-center justify-between text-xs text-slate-600 pt-1 border-t border-slate-100">
+                  <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800">
                     <span className="flex items-center gap-1.5 font-medium">
                       <Phone className="w-3.5 h-3.5 text-slate-400" /> {worker.phone}
                     </span>
                     <a
                       href={`tel:${worker.phone}`}
-                      className="text-xs font-bold text-indigo-600 hover:underline"
+                      className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
                     >
                       Call Technician
                     </a>
@@ -538,7 +538,7 @@ async function WorkerPortfolioContent() {
 
                 {/* Proof Gallery */}
                 {resolutionProofs.length > 0 && (
-                  <div className="space-y-2 pt-2 border-t border-slate-100">
+                  <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
                       Verified Handover Proof Gallery
                     </span>
@@ -546,7 +546,7 @@ async function WorkerPortfolioContent() {
                       {resolutionProofs.map((att) => (
                         <div
                           key={att.id}
-                          className="aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200 relative group"
+                          className="aspect-square rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 relative group"
                         >
                           <Image
                             src={att.fileUrl}
@@ -573,7 +573,7 @@ export default async function WorkerPortfolioPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center text-sm text-slate-400">
+        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400">
           Loading staff portfolios...
         </div>
       }

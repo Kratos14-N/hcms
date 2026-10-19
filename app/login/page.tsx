@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Sparkles,
   ArrowRight,
@@ -19,64 +20,71 @@ import {
   Flame,
   Check,
   CheckCircle2,
-  Zap,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 type RoleType = "STUDENT" | "WARDEN" | "WORKER" | "COORDINATOR";
 
 interface QuickDemoAccount {
+  id: string;
   name: string;
   subtext: string;
   roleBadge: string;
   badgeClass: string;
   avatarGrad: string;
   email: string;
+  phone?: string;
   role: RoleType;
 }
 
 const DEMO_ACCOUNTS: QuickDemoAccount[] = [
   {
+    id: "cmv48dmol00007k7czr57hpc2",
     name: "Aarav Sharma",
     subtext: "Room A-204 • Block A",
     roleBadge: "Resident Student",
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800",
     avatarGrad: "from-blue-600 to-indigo-600",
     email: "aarav.student@hostel.edu",
     role: "STUDENT",
   },
   {
+    id: "cmv48dn1z00017k7ct1ktqlrs",
     name: "Rohan Patel",
     subtext: "Room B-312 • Block B",
     roleBadge: "Resident Student",
-    badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800",
     avatarGrad: "from-blue-600 to-indigo-600",
     email: "rohan.student@hostel.edu",
     role: "STUDENT",
   },
   {
+    id: "cmv48do8r00047k7cey5r15op",
     name: "Dr. Vikram Singh",
     subtext: "Block A Administration",
     roleBadge: "Hostel Warden",
-    badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-200",
+    badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800",
     avatarGrad: "from-indigo-600 to-violet-600",
     email: "warden.singh@hostel.edu",
     role: "WARDEN",
   },
   {
+    id: "cmv48dpg800077k7caoq3b1y6",
     name: "Ramesh Kumar",
     subtext: "+91 98111 22233 • Electrical",
     roleBadge: "Field Technician",
-    badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+    badgeClass: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800",
     avatarGrad: "from-amber-500 to-orange-600",
-    email: "+91 98111 22233",
+    email: "ramesh.electrician@hostel.edu",
+    phone: "+91 98111 22233",
     role: "WORKER",
   },
   {
+    id: "cmv48dr16000b7k7cusilp342",
     name: "Pooja Mehta",
     subtext: "Campus Operations Desk",
     roleBadge: "Coordinator Admin",
-    badgeClass: "bg-purple-50 text-purple-700 border-purple-200",
+    badgeClass: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800",
     avatarGrad: "from-purple-600 to-pink-600",
     email: "admin.hcms@hostel.edu",
     role: "COORDINATOR",
@@ -93,6 +101,7 @@ function setClientCookies(role: string, userId: string) {
 }
 
 export default function LoginPage() {
+  const router = useRouter();
   const [authMode, setAuthMode] = useState<"signin" | "register">("signin");
 
   // Sign In credentials
@@ -112,7 +121,9 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const selectedDemo = DEMO_ACCOUNTS.find(
-    (acc) => acc.email.toLowerCase() === email.trim().toLowerCase()
+    (acc) =>
+      acc.email.toLowerCase() === email.trim().toLowerCase() ||
+      (acc.phone && acc.phone === email.trim())
   );
 
   const handleSelectDemo = (demo: QuickDemoAccount) => {
@@ -124,13 +135,19 @@ export default function LoginPage() {
   const handleSignIn = async (
     e?: React.FormEvent,
     directRole?: RoleType,
-    directEmail?: string
+    directEmail?: string,
+    directUserId?: string
   ) => {
     if (e) e.preventDefault();
     setIsLoading(true);
     setErrorMessage(null);
 
     const activeEmail = (directEmail || email).trim().toLowerCase();
+    const demoMatch = DEMO_ACCOUNTS.find(
+      (d) =>
+        d.email.toLowerCase() === activeEmail ||
+        (d.phone && d.phone.replace(/[^0-9]/g, "") === activeEmail.replace(/[^0-9]/g, ""))
+    );
 
     // Determine target role estimation
     const isWardenEmail =
@@ -157,6 +174,8 @@ export default function LoginPage() {
 
     const estimatedRole: RoleType = directRole
       ? directRole
+      : demoMatch?.role
+      ? demoMatch.role
       : isWardenEmail
       ? "WARDEN"
       : isWorkerEmail
@@ -174,12 +193,15 @@ export default function LoginPage() {
         ? "/coordinator"
         : "/warden";
 
+    const effectiveUserId =
+      directUserId || demoMatch?.id || `usr_${activeEmail.replace(/[^a-z0-9]/g, "")}`;
+
     // Immediate optimistic cookie stamping
-    setClientCookies(estimatedRole, `usr_${activeEmail.replace(/[^a-z0-9]/g, "")}`);
+    setClientCookies(estimatedRole, effectiveUserId);
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
 
       const payload =
         authMode === "register"
@@ -198,8 +220,10 @@ export default function LoginPage() {
             }
           : {
               email: activeEmail,
-              phone: isPhoneLogin ? activeEmail : undefined,
+              phone: isPhoneLogin ? activeEmail : demoMatch?.phone || undefined,
               identifier: activeEmail,
+              role: estimatedRole,
+              userId: effectiveUserId,
             };
 
       const res = await fetch("/api/auth/login", {
@@ -222,19 +246,21 @@ export default function LoginPage() {
         }
       }
 
-      window.location.assign(targetUrl);
+      router.push(targetUrl);
+      router.refresh();
     } catch (err: unknown) {
       console.warn("Authentication warning:", err);
-      window.location.assign(defaultRedirect);
+      router.push(defaultRedirect);
+      router.refresh();
     } finally {
-      setTimeout(() => setIsLoading(false), 3000);
+      setTimeout(() => setIsLoading(false), 2000);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
-      {/* Top Header - Matches the actual dashboard layout */}
-      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/70 shadow-xs">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+      {/* Top Header */}
+      <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-[#111726]/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800 shadow-xs transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           {/* Logo & Identity */}
           <div className="flex items-center gap-3">
@@ -242,10 +268,10 @@ export default function LoginPage() {
               <Sparkles className="w-4 h-4" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-sm tracking-tight text-slate-900">
+              <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white">
                 HCMS
               </span>
-              <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase -mt-0.5">
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider uppercase -mt-0.5">
                 Hostel Operations Desk
               </span>
             </div>
@@ -254,13 +280,13 @@ export default function LoginPage() {
           {/* Quick Help, Theme Toggle & Status */}
           <div className="flex items-center gap-3 text-xs">
             <ThemeToggle />
-            <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium">
+            <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>Campus Facility Desk • Blocks A, B, C & D</span>
             </div>
             <a
               href="tel:+91800123456"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 font-semibold transition shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-semibold transition shadow-2xs"
               title="24/7 Hostel Duty Office"
             >
               <PhoneCall className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
@@ -277,19 +303,19 @@ export default function LoginPage() {
           
           {/* Left Column: Human Context & Campus Facilities Showcase */}
           <div className="lg:col-span-6 space-y-6 lg:pr-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200/60 text-indigo-700 text-xs font-semibold">
-              <Building2 className="w-3.5 h-3.5 text-indigo-600" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/60 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-semibold">
+              <Building2 className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
               <span>Campus Facility & Residence Portal</span>
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
                 Hostel maintenance, <br className="hidden sm:inline" />
-                <span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-blue-600 dark:from-indigo-400 dark:via-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">
                   handled with care.
                 </span>
               </h1>
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
                 The centralized portal for residents, hostel wardens, and maintenance crews. 
                 Report room issues in 30 seconds, track electrician and plumber visits in real time, 
                 and verify repairs with photo sign-offs.
@@ -298,52 +324,52 @@ export default function LoginPage() {
 
             {/* 3 Value Pillars */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-              <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-2">
-                <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
-                  <Flame className="w-4 h-4 text-rose-600" />
+              <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+                <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold">
+                  <Flame className="w-4 h-4 text-rose-600 dark:text-rose-400" />
                 </div>
-                <h4 className="text-xs font-bold text-slate-900">2-Hr Emergency SLA</h4>
-                <p className="text-[11px] text-slate-500 leading-normal">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">2-Hr Emergency SLA</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
                   Immediate dispatch for geyser leaks, water outages, and electrical hazards.
                 </p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-                  <Wrench className="w-4 h-4 text-amber-600" />
+              <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+                <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                  <Wrench className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 </div>
-                <h4 className="text-xs font-bold text-slate-900">Dedicated Technicians</h4>
-                <p className="text-[11px] text-slate-500 leading-normal">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Dedicated Technicians</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
                   Assigned staff for electrical, plumbing, carpentry, and Wi-Fi networks.
                 </p>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-2">
-                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-                  <ShieldCheck className="w-4 h-4 text-indigo-600" />
+              <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+                  <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <h4 className="text-xs font-bold text-slate-900">Warden Oversight</h4>
-                <p className="text-[11px] text-slate-500 leading-normal">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Warden Oversight</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
                   Transparent supervision and resolution sign-offs across all hostel blocks.
                 </p>
               </div>
             </div>
 
             {/* Realistic Campus Live Activity Card */}
-            <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0">
+            <div className="bg-white dark:bg-[#111726]/90 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3.5 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-slate-900 truncate">
+                  <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
                     Resolved • Room B-312 Geyser Thermostat
                   </span>
-                  <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60 shrink-0">
+                  <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200/60 dark:border-emerald-800 shrink-0">
                     Just now
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
                   Assigned to Suresh Verma (Plumbing) • Verified by Dr. Vikram Singh
                 </p>
               </div>
@@ -352,15 +378,15 @@ export default function LoginPage() {
 
           {/* Right Column: Polished, Human-Centered Auth Card */}
           <div className="lg:col-span-6 w-full max-w-xl mx-auto">
-            <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm shadow-slate-200/50 p-6 sm:p-8 space-y-6">
+            <div className="bg-white dark:bg-[#111726] rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6 transition-colors">
               
               {/* Card Header & Tab Switcher */}
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                     {authMode === "signin" ? "Sign In to Portal" : "New Resident Registration"}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                     {authMode === "signin"
                       ? "Enter your credentials or pick a demo campus profile below."
                       : "Register your hostel room and block to start lodging requests."}
@@ -368,7 +394,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Segmented Mode Selector */}
-                <div className="p-1 bg-slate-100 rounded-2xl flex gap-1 border border-slate-200/60">
+                <div className="p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl flex gap-1 border border-slate-200/60 dark:border-slate-700">
                   <button
                     type="button"
                     onClick={() => {
@@ -377,8 +403,8 @@ export default function LoginPage() {
                     }}
                     className={`flex-1 py-2 rounded-xl text-xs font-bold transition duration-150 cursor-pointer ${
                       authMode === "signin"
-                        ? "bg-white text-slate-900 shadow-xs"
-                        : "text-slate-600 hover:text-slate-900"
+                        ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     Sign In
@@ -395,8 +421,8 @@ export default function LoginPage() {
                     }}
                     className={`flex-1 py-2 rounded-xl text-xs font-bold transition duration-150 cursor-pointer ${
                       authMode === "register"
-                        ? "bg-white text-slate-900 shadow-xs"
-                        : "text-slate-600 hover:text-slate-900"
+                        ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     Register New Resident
@@ -406,7 +432,7 @@ export default function LoginPage() {
 
               {/* Error Notice */}
               {errorMessage && (
-                <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2.5">
+                <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs font-medium flex items-center gap-2.5">
                   <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
@@ -419,7 +445,7 @@ export default function LoginPage() {
                   <div className="space-y-3.5 pt-1 animate-in fade-in duration-200">
                     {/* Legal Name */}
                     <div className="space-y-1.5">
-                      <label className="block text-xs font-bold text-slate-700">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
                         Full Legal Name
                       </label>
                       <div className="relative">
@@ -430,14 +456,14 @@ export default function LoginPage() {
                           onChange={(e) => setRegName(e.target.value)}
                           required
                           placeholder="e.g. Devika Sen"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50/60 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition"
                         />
                       </div>
                     </div>
 
                     {/* Role Picker */}
                     <div className="space-y-1.5">
-                      <label className="block text-xs font-bold text-slate-700">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
                         Account Role
                       </label>
                       <div className="grid grid-cols-3 gap-2">
@@ -455,8 +481,8 @@ export default function LoginPage() {
                               onClick={() => setRegRole(item.id)}
                               className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-bold border transition cursor-pointer ${
                                 isSelected
-                                  ? "bg-indigo-50 border-indigo-300 text-indigo-700 shadow-xs"
-                                  : "bg-slate-50/60 border-slate-200 text-slate-600 hover:bg-slate-100"
+                                  ? "bg-indigo-50 dark:bg-indigo-950/60 border-indigo-300 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300 shadow-xs"
+                                  : "bg-slate-50/60 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/60"
                               }`}
                             >
                               <ItemIcon className="w-3.5 h-3.5" />
@@ -471,7 +497,7 @@ export default function LoginPage() {
                     {regRole === "STUDENT" && (
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-bold text-slate-700">
+                          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
                             Room Number
                           </label>
                           <input
@@ -480,18 +506,18 @@ export default function LoginPage() {
                             onChange={(e) => setRegRoomNumber(e.target.value)}
                             required
                             placeholder="e.g. B-402"
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/60 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition"
                           />
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-bold text-slate-700">
+                          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
                             Hostel Block
                           </label>
                           <select
                             value={regBlockAssigned}
                             onChange={(e) => setRegBlockAssigned(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl bg-slate-50/60 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition cursor-pointer"
+                            className="w-full px-3 py-2.5 rounded-xl bg-slate-50/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition cursor-pointer"
                           >
                             <option value="Block A">Block A</option>
                             <option value="Block B">Block B</option>
@@ -505,13 +531,13 @@ export default function LoginPage() {
                     {/* Warden Block */}
                     {regRole === "WARDEN" && (
                       <div className="space-y-1.5">
-                        <label className="block text-xs font-bold text-slate-700">
+                        <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
                           Assigned Block Jurisdiction
                         </label>
                         <select
                           value={regBlockAssigned}
                           onChange={(e) => setRegBlockAssigned(e.target.value)}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/60 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition cursor-pointer"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition cursor-pointer"
                         >
                           <option value="Block A">Block A Administration</option>
                           <option value="Block B">Block B Administration</option>
@@ -524,13 +550,13 @@ export default function LoginPage() {
                     {/* Worker Specialization */}
                     {regRole === "WORKER" && (
                       <div className="space-y-1.5">
-                        <label className="block text-xs font-bold text-slate-700">
+                        <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
                           Trade Specialization
                         </label>
                         <select
                           value={regTrade}
                           onChange={(e) => setRegTrade(e.target.value)}
-                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/60 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition cursor-pointer"
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition cursor-pointer"
                         >
                           <option value="ELECTRICAL">Electrical & Lighting</option>
                           <option value="PLUMBING">Plumbing & Sanitation</option>
@@ -573,11 +599,11 @@ export default function LoginPage() {
                 {/* Password Field */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="block text-xs font-bold text-slate-700">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
                       Password
                     </label>
-                    <span className="text-[11px] text-slate-400">
-                      Default: <code className="text-slate-600 font-mono">admin@hostel2026</code>
+                    <span className="text-[11px] text-slate-400 dark:text-slate-500">
+                      Default: <code className="text-slate-600 dark:text-slate-300 font-mono">admin@hostel2026</code>
                     </span>
                   </div>
                   <div className="relative">
@@ -588,12 +614,12 @@ export default function LoginPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="••••••••••••"
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50/60 border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="text-slate-400 hover:text-slate-600 absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer transition p-1"
+                      className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer transition p-1"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -609,13 +635,13 @@ export default function LoginPage() {
                       onChange={(e) => setRememberMe(e.target.checked)}
                       className="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/30"
                     />
-                    <span className="text-xs text-slate-600 font-medium">Keep me signed in</span>
+                    <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Keep me signed in</span>
                   </label>
                   <span
                     onClick={() => {
                       alert("Demo accounts use default password: admin@hostel2026. For forgotten keys, contact your Block Warden.");
                     }}
-                    className="text-xs text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer font-medium"
+                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer font-medium"
                   >
                     Need password help?
                   </span>
@@ -648,20 +674,21 @@ export default function LoginPage() {
               </form>
 
               {/* Quick Select Campus Profiles - Refined Humanized List */}
-              <div className="pt-4 border-t border-slate-200/80 space-y-3">
+              <div className="pt-4 border-t border-slate-200/80 dark:border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800">
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                     Quick Demo Profiles
                   </span>
-                  <span className="text-[11px] text-slate-500">
-                    1-click autofill by role
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    1-click instant login
                   </span>
                 </div>
 
                 <div className="space-y-2">
                   {DEMO_ACCOUNTS.map((demo) => {
                     const isCurrent =
-                      email.trim().toLowerCase() === demo.email.toLowerCase();
+                      email.trim().toLowerCase() === demo.email.toLowerCase() ||
+                      (demo.phone && email.trim() === demo.phone);
 
                     return (
                       <div
@@ -669,8 +696,8 @@ export default function LoginPage() {
                         onClick={() => handleSelectDemo(demo)}
                         className={`p-2.5 rounded-xl border transition cursor-pointer flex items-center justify-between gap-3 ${
                           isCurrent
-                            ? "bg-indigo-50/70 border-indigo-300 ring-2 ring-indigo-500/10 shadow-2xs"
-                            : "bg-slate-50/60 hover:bg-slate-100/80 border-slate-200"
+                            ? "bg-indigo-50/70 dark:bg-indigo-950/50 border-indigo-300 dark:border-indigo-700 ring-2 ring-indigo-500/10 shadow-2xs"
+                            : "bg-slate-50/60 dark:bg-slate-800/60 hover:bg-slate-100/80 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
@@ -684,10 +711,10 @@ export default function LoginPage() {
                               .join("")}
                           </div>
                           <div className="truncate">
-                            <span className="text-xs font-bold text-slate-800 block truncate">
+                            <span className="text-xs font-bold text-slate-800 dark:text-slate-100 block truncate">
                               {demo.name}
                             </span>
-                            <span className="text-[10px] text-slate-500 font-medium block truncate -mt-0.5">
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium block truncate -mt-0.5">
                               {demo.subtext}
                             </span>
                           </div>
@@ -708,9 +735,9 @@ export default function LoginPage() {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleSignIn(undefined, demo.role, demo.email);
+                                handleSignIn(undefined, demo.role, demo.email, demo.id);
                               }}
-                              className="text-[10px] font-bold text-slate-500 hover:text-indigo-600 px-1.5 py-0.5 rounded hover:bg-white transition"
+                              className="text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 px-1.5 py-0.5 rounded hover:bg-white dark:hover:bg-slate-700 transition"
                               title={`Instant entrance as ${demo.name}`}
                             >
                               Fast Enter →
@@ -730,14 +757,14 @@ export default function LoginPage() {
       </main>
 
       {/* Footer - Clean, Institutional & Cohesive */}
-      <footer className="w-full border-t border-slate-200/70 bg-white/60 py-6 text-xs text-slate-500">
+      <footer className="w-full border-t border-slate-200/70 dark:border-slate-800 bg-white/60 dark:bg-[#111726]/60 py-6 text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-700">HCMS</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-200">HCMS</span>
             <span>•</span>
             <span>Campus Hostel Complaint & Maintenance Operations</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-500 text-[11px]">
+          <div className="flex items-center gap-4 text-slate-500 dark:text-slate-400 text-[11px]">
             <span>Block A • Block B • Block C • Block D</span>
             <span>•</span>
             <span>24/7 Facility Support</span>

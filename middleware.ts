@@ -60,11 +60,9 @@ export function middleware(request: NextRequest) {
     return applySecurityHeaders(NextResponse.redirect(new URL(ROLE_HOMES[roleCookie!], request.url)));
   }
 
-  // 4. Handle "/login" access for already-authenticated users
+  // 4. Handle "/login" access
   if (pathname === "/login") {
-    if (isAuthenticated) {
-      return applySecurityHeaders(NextResponse.redirect(new URL(ROLE_HOMES[roleCookie!], request.url)));
-    }
+    // If user explicitly asks for /login without ?redirect=false, let them view the login portal cleanly
     return applySecurityHeaders(NextResponse.next());
   }
 
@@ -106,8 +104,9 @@ export function middleware(request: NextRequest) {
   }
 
   // Boundary B: Field Technician / Worker Dashboard (/worker/*)
+  // Workers, Wardens, and Coordinators have legitimate access to technician dispatch & staff portfolio
   else if (pathname.startsWith("/worker")) {
-    if (role !== "WORKER") {
+    if (role !== "WORKER" && role !== "WARDEN" && role !== "COORDINATOR") {
       return applySecurityHeaders(NextResponse.redirect(new URL(ROLE_HOMES[role], request.url)));
     }
   }

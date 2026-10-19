@@ -135,44 +135,44 @@ async function NewRequestFormContent() {
       {/* Back button */}
       <Link
         href="/student"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 transition"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
       >
         <ArrowLeft className="w-3.5 h-3.5" /> Back to My Complaints
       </Link>
 
       {/* Header */}
       <div className="space-y-1.5">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 text-blue-700 dark:text-blue-400 text-xs font-bold">
+          <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
           Resident Lodging Desk
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Lodge Maintenance Request.
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500">
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
           Describe the issue and attach optional photo/video evidence. Tickets are automatically routed to on-duty staff.
         </p>
       </div>
 
       <form
         action={createComplaint}
-        className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-lg shadow-slate-200/40 space-y-5"
+        className="bg-white dark:bg-[#111726]/90 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-lg shadow-slate-200/40 dark:shadow-slate-950/40 space-y-5"
       >
         {/* Service Classification */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
             Category & Fault Type <span className="text-rose-500">*</span>
           </label>
           <select
             name="subCategoryId"
             required
-            className="w-full text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl border border-slate-300 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition cursor-pointer"
+            className="w-full text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition cursor-pointer"
           >
-            <option value="">Select Category & Issue Type...</option>
+            <option value="" className="dark:bg-slate-800 dark:text-white">Select Category & Issue Type...</option>
             {categories.map((cat) => (
-              <optgroup key={cat.id} label={cat.name}>
+              <optgroup key={cat.id} label={cat.name} className="dark:bg-slate-800 dark:text-white">
                 {cat.subCategories.map((sub) => (
-                  <option key={sub.id} value={sub.id}>
+                  <option key={sub.id} value={sub.id} className="dark:bg-slate-800 dark:text-white">
                     {cat.name} — {sub.name} (SLA: {sub.defaultTATHours}h)
                   </option>
                 ))}
@@ -183,7 +183,7 @@ async function NewRequestFormContent() {
 
         {/* Location */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
             Room / Floor Location <span className="text-rose-500">*</span>
           </label>
           <div className="relative">
@@ -194,14 +194,14 @@ async function NewRequestFormContent() {
               required
               defaultValue={currentStudent?.roomNumber ? `Room ${currentStudent.roomNumber}` : ""}
               placeholder="e.g. Room B-312, Floor 2 Corridor, or Block Washroom"
-              className="w-full text-xs sm:text-sm pl-11 pr-4 py-3 rounded-2xl border border-slate-300 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              className="w-full text-xs sm:text-sm pl-11 pr-4 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
             />
           </div>
         </div>
 
         {/* Description */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
             Description of the Defect <span className="text-rose-500">*</span>
           </label>
           <textarea
@@ -209,24 +209,24 @@ async function NewRequestFormContent() {
             required
             rows={3}
             placeholder="Please detail the malfunction (e.g. Ceiling fan grinding noise, washroom pipe leak, or Wi-Fi AP red blinking light)..."
-            className="w-full text-xs sm:text-sm p-4 rounded-2xl border border-slate-300 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition leading-relaxed"
+            className="w-full text-xs sm:text-sm p-4 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition leading-relaxed"
           />
         </div>
 
         {/* Photo / Video upload */}
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
             Attach Evidence (Photo or Video)
           </label>
-          <label className="border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50/60 hover:bg-indigo-50/20 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition group">
-            <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center text-slate-500 group-hover:text-indigo-600 transition">
+          <label className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-400 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-indigo-50/20 dark:hover:bg-indigo-950/20 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition group">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/50 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
               <UploadCloud className="w-5 h-5" />
             </div>
             <div className="text-center">
-              <span className="text-xs font-bold text-slate-800 group-hover:text-indigo-600">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
                 Click to browse photo or video
               </span>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
                 PNG, JPG, or MP4 video (up to 10MB)
               </p>
             </div>
@@ -240,7 +240,7 @@ async function NewRequestFormContent() {
         </div>
 
         {/* Emergency Hazard Toggle */}
-        <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex items-start gap-3">
+        <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/40 flex items-start gap-3">
           <input
             type="checkbox"
             name="isEmergency"
@@ -250,12 +250,12 @@ async function NewRequestFormContent() {
           <div className="space-y-0.5">
             <label
               htmlFor="isEmergency"
-              className="text-xs font-bold text-slate-900 cursor-pointer flex items-center gap-1.5"
+              className="text-xs font-bold text-slate-900 dark:text-white cursor-pointer flex items-center gap-1.5"
             >
               <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
               Flag as Critical / Emergency Hazard
             </label>
-            <p className="text-[11px] text-slate-500 leading-normal">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
               Triggers the immediate 2-hour warden dispatch countdown. Reserve for water flooding, sparks, short circuits, or structural risks.
             </p>
           </div>
@@ -277,7 +277,7 @@ export default function NewRequestPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center text-sm text-slate-400">
+        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400">
           Loading ticket lodging desk...
         </div>
       }

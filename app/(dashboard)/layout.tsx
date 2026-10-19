@@ -156,7 +156,7 @@ export default async function DashboardLayout({
   // Role visual accents
   const roleTheme = isStudent
     ? {
-      badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
+      badgeBg: "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-900/50",
       avatarGrad: "from-blue-600 to-indigo-600",
       label: "Resident Student",
       extraInfo: user.roomNumber ? `Room ${user.roomNumber}` : user.blockAssigned || "Hostel Resident",
@@ -164,7 +164,7 @@ export default async function DashboardLayout({
     }
     : isWorker
       ? {
-        badgeBg: "bg-amber-50 text-amber-700 border-amber-200",
+        badgeBg: "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-900/50",
         avatarGrad: "from-amber-500 to-orange-600",
         label: "Field Technician",
         extraInfo: user.categoryExpertise ? `${user.categoryExpertise} Maintenance` : "Facility Support",
@@ -172,14 +172,14 @@ export default async function DashboardLayout({
       }
       : isWarden
         ? {
-          badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
+          badgeBg: "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-900/50",
           avatarGrad: "from-indigo-600 to-violet-600",
           label: "Hostel Warden",
           extraInfo: user.blockAssigned ? `${user.blockAssigned} Admin` : "Warden In-charge",
           icon: Shield,
         }
         : {
-          badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
+          badgeBg: "bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-900/50",
           avatarGrad: "from-purple-600 to-pink-600",
           label: "Coordinator Admin",
           extraInfo: "Campus Operations",

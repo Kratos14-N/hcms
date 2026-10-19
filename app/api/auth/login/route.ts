@@ -295,41 +295,44 @@ export async function POST(request: Request) {
 
     // 2. Resilient dynamic fallback with the exact user credentials provided
     if (!user) {
-      if (email) {
-        const cleanEmail = email.trim().toLowerCase();
-        const matched = FALLBACK_DIRECTORY.find(
-          (u) => u.email.toLowerCase() === cleanEmail
-        );
+      const cleanEmail = (email || identifier || "").trim().toLowerCase();
+      const matched = FALLBACK_DIRECTORY.find(
+        (u) =>
+          (userId && u.id === userId) ||
+          (cleanEmail && u.email.toLowerCase() === cleanEmail) ||
+          (cleanDigits && u.phone && u.phone.replace(/[^0-9]/g, "").includes(cleanDigits)) ||
+          (requestedRole && u.role === targetRole)
+      );
 
-        if (matched) {
-          user = {
-            ...matched,
-            name: name?.trim() || matched.name,
-            roomNumber: roomNumber?.trim() || matched.roomNumber,
-            blockAssigned: blockAssigned?.trim() || matched.blockAssigned,
-            categoryExpertise: categoryExpertise?.trim() || matched.categoryExpertise,
-          };
-        } else {
-          // Create custom fallback user with exact submitted details
-          user = {
-            id: `usr_${Date.now()}`,
-            name:
-              name?.trim() ||
-              cleanEmail
-                .split("@")[0]
-                .replace(/[._]/g, " ")
-                .replace(/\b\w/g, (c: string) => c.toUpperCase()),
-            email: cleanEmail,
-            role: targetRole,
-            roomNumber: roomNumber?.trim() || (targetRole === Role.STUDENT ? "A-204" : null),
-            blockAssigned: blockAssigned?.trim() || (targetRole === Role.WARDEN ? "Block A" : null),
-            categoryExpertise: categoryExpertise?.trim() || (targetRole === Role.WORKER ? "ELECTRICAL" : null),
-          };
-        }
+      if (matched) {
+        user = {
+          ...matched,
+          name: name?.trim() || matched.name,
+          roomNumber: roomNumber?.trim() || matched.roomNumber,
+          blockAssigned: blockAssigned?.trim() || matched.blockAssigned,
+          categoryExpertise: categoryExpertise?.trim() || matched.categoryExpertise,
+        };
+      } else if (cleanEmail) {
+        // Create custom fallback user with exact submitted details
+        user = {
+          id: userId || `usr_${Date.now()}`,
+          name:
+            name?.trim() ||
+            cleanEmail
+              .split("@")[0]
+              .replace(/[._]/g, " ")
+              .replace(/\b\w/g, (c: string) => c.toUpperCase()),
+          email: cleanEmail.includes("@") ? cleanEmail : `staff.${cleanDigits || Date.now()}@hostel.edu`,
+          role: targetRole,
+          roomNumber: roomNumber?.trim() || (targetRole === Role.STUDENT ? "A-204" : null),
+          blockAssigned: blockAssigned?.trim() || (targetRole === Role.WARDEN ? "Block A" : null),
+          categoryExpertise: categoryExpertise?.trim() || (targetRole === Role.WORKER ? "ELECTRICAL" : null),
+          phone: phone?.trim() || (isPhoneLogin ? rawInput : null),
+        };
       } else {
         // Fallback by role from directory
-        const matched = FALLBACK_DIRECTORY.find((u) => u.role === targetRole);
-        user = matched || FALLBACK_DIRECTORY[0];
+        const roleMatch = FALLBACK_DIRECTORY.find((u) => u.role === targetRole);
+        user = roleMatch || FALLBACK_DIRECTORY[0];
       }
     }
 

@@ -160,13 +160,13 @@ async function AgentQueueContent({
 
       {/* Segmented Filter Control */}
       <div className="flex justify-center">
-        <div className="inline-flex p-1.5 rounded-2xl bg-white border border-slate-200/90 shadow-xs text-xs font-semibold gap-1">
+        <div className="inline-flex p-1.5 rounded-2xl bg-white dark:bg-[#111726]/90 border border-slate-200/90 dark:border-slate-800 shadow-xs text-xs font-semibold gap-1">
           <Link
             href="/warden"
             className={`px-4 py-2 rounded-xl transition ${
               !filter
-                ? "bg-slate-900 text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
             }`}
           >
             All Open ({allOpenCount})
@@ -176,7 +176,7 @@ async function AgentQueueContent({
             className={`px-4 py-2 rounded-xl transition flex items-center gap-1.5 ${
               filter === "EMERGENCY"
                 ? "bg-rose-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-rose-600 hover:bg-rose-50"
+                : "text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40"
             }`}
           >
             <Flame className="w-3.5 h-3.5" />
@@ -187,7 +187,7 @@ async function AgentQueueContent({
             className={`px-4 py-2 rounded-xl transition ${
               filter === "IN_PROGRESS"
                 ? "bg-indigo-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-indigo-600 hover:bg-indigo-50"
+                : "text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40"
             }`}
           >
             In Progress ({inProgressCount})
@@ -197,7 +197,7 @@ async function AgentQueueContent({
             className={`px-4 py-2 rounded-xl transition flex items-center gap-1.5 ${
               filter === "RESOLVED"
                 ? "bg-emerald-600 text-white shadow-xs"
-                : "text-slate-600 hover:text-emerald-600 hover:bg-emerald-50"
+                : "text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -208,10 +208,10 @@ async function AgentQueueContent({
 
       {/* Ticket Cards */}
       {tickets.length === 0 ? (
-        <div className="py-20 text-center bg-white rounded-3xl border border-slate-200/80 shadow-xs text-sm text-slate-500 space-y-2">
-          <Inbox className="w-10 h-10 text-slate-300 mx-auto" />
-          <h3 className="font-bold text-slate-800">No Tickets in this Queue</h3>
-          <p className="text-xs text-slate-400">All hostel requests under this filter have been handled.</p>
+        <div className="py-20 text-center bg-white dark:bg-[#111726]/90 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs text-sm text-slate-500 dark:text-slate-400 space-y-2">
+          <Inbox className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto" />
+          <h3 className="font-bold text-slate-800 dark:text-white">No Tickets in this Queue</h3>
+          <p className="text-xs text-slate-400 dark:text-slate-500">All hostel requests under this filter have been handled.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -230,16 +230,16 @@ async function AgentQueueContent({
               <Link
                 key={ticket.id}
                 href={`/warden/tickets/${ticket.id}`}
-                className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs hover:border-indigo-300 hover:shadow-md transition duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group block"
+                className="bg-white dark:bg-[#111726]/90 rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md transition duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group block"
               >
                 <div className="space-y-1.5 flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-lg">
+                    <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-lg">
                       {ticket.complaintRefId}
                     </span>
 
                     {isEmergency && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-lg bg-rose-50 text-rose-700 border border-rose-200">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
                         <Flame className="w-3 h-3 text-rose-600 fill-rose-500" />
                         2-Hour Emergency
                       </span>
@@ -248,37 +248,37 @@ async function AgentQueueContent({
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
                         isResolved
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
                           : isBreached
-                          ? "bg-rose-50 text-rose-700 border-rose-200 animate-pulse"
-                          : "bg-amber-50 text-amber-700 border-amber-200"
+                          ? "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800 animate-pulse"
+                          : "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800"
                       }`}
                     >
                       {ticket.status.replace("_", " ")}
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-base text-slate-900 group-hover:text-indigo-600 transition truncate">
+                  <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition truncate">
                     {ticket.subCategory?.category?.name} — {ticket.subCategory?.name}
                   </h3>
 
-                  <p className="text-xs text-slate-500 line-clamp-1 leading-relaxed">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 leading-relaxed">
                     {ticket.description}
                   </p>
 
                   <div className="flex items-center gap-4 text-[11px] text-slate-400 pt-1 flex-wrap">
-                    <span className="flex items-center gap-1 text-slate-700 font-semibold">
+                    <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-semibold">
                       <MapPin className="w-3 h-3 text-indigo-500" /> {ticket.location}
                     </span>
                     <span>•</span>
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1 dark:text-slate-400">
                       <User className="w-3 h-3 text-slate-400" />
                       {ticket.student?.name || "Resident"}
                     </span>
                     <span>•</span>
                     <span
                       suppressHydrationWarning
-                      className={`flex items-center gap-1 font-semibold ${isBreached ? "text-rose-600" : "text-slate-600"}`}
+                      className={`flex items-center gap-1 font-semibold ${isBreached ? "text-rose-600 dark:text-rose-400" : "text-slate-600 dark:text-slate-300"}`}
                     >
                       <Clock className="w-3 h-3" />
                       Target: {new Date(ticket.tatDeadline).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
@@ -290,18 +290,18 @@ async function AgentQueueContent({
                 <div className="flex items-center gap-4 shrink-0 self-end sm:self-center">
                   <div className="text-right hidden sm:block">
                     {ticket.worker ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-semibold">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold">
                         <span className="w-2 h-2 rounded-full bg-emerald-500" />
                         {ticket.worker.name}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold">
                         Unassigned Staff
                       </span>
                     )}
                   </div>
 
-                  <div className="w-8 h-8 rounded-full bg-slate-50 group-hover:bg-indigo-50 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition">
+                  <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 group-hover:bg-indigo-50 dark:group-hover:bg-slate-700 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -318,7 +318,7 @@ export default async function AgentPage(props: PageProps) {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center text-sm text-slate-400">
+        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400 dark:text-slate-500">
           Loading warden triage desk...
         </div>
       }

@@ -78,28 +78,28 @@ export function TicketStatusUpdater({
   const isResolved = status === ComplaintStatus.RESOLVED;
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-teal-500/40 shadow-md p-5 space-y-4">
-      <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-        <Wrench className="w-4 h-4 text-teal-600" />
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+    <div className="bg-white dark:bg-[#111726]/90 rounded-2xl border-2 border-teal-500/40 dark:border-teal-500/30 shadow-md p-5 space-y-4">
+      <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+        <Wrench className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
           Technician Action Panel
         </h3>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
             Assigned Field Technician
           </label>
           <select
             value={workerId}
             onChange={(e) => setWorkerId(e.target.value)}
             disabled={loading}
-            className="w-full text-xs font-semibold p-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
+            className="w-full text-xs font-semibold p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
           >
-            <option value="">Select Technician...</option>
+            <option value="" className="text-slate-900 dark:text-white dark:bg-slate-800">Select Technician...</option>
             {technicians.map((t) => (
-              <option key={t.id} value={t.id}>
+              <option key={t.id} value={t.id} className="text-slate-900 dark:text-white dark:bg-slate-800">
                 {t.name} ({t.categoryExpertise || "Staff"})
               </option>
             ))}
@@ -107,24 +107,24 @@ export function TicketStatusUpdater({
         </div>
 
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
             Update Ticket Status
           </label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as ComplaintStatus)}
             disabled={loading}
-            className="w-full text-xs font-semibold p-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
+            className="w-full text-xs font-semibold p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
           >
-            <option value={ComplaintStatus.ASSIGNED}>ASSIGNED (In Queue)</option>
-            <option value={ComplaintStatus.IN_PROGRESS}>IN_PROGRESS (Working on site)</option>
-            <option value={ComplaintStatus.RESOLVED}>RESOLVED (Ready for Student Check)</option>
-            <option value={ComplaintStatus.CLOSED}>CLOSED (Completed & Verified)</option>
+            <option value={ComplaintStatus.ASSIGNED} className="text-slate-900 dark:text-white dark:bg-slate-800">ASSIGNED (In Queue)</option>
+            <option value={ComplaintStatus.IN_PROGRESS} className="text-slate-900 dark:text-white dark:bg-slate-800">IN_PROGRESS (Working on site)</option>
+            <option value={ComplaintStatus.RESOLVED} className="text-slate-900 dark:text-white dark:bg-slate-800">RESOLVED (Ready for Student Check)</option>
+            <option value={ComplaintStatus.CLOSED} className="text-slate-900 dark:text-white dark:bg-slate-800">CLOSED (Completed & Verified)</option>
           </select>
         </div>
 
         <div className="space-y-1.5">
-          <label className="block text-xs font-bold text-slate-700">
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
             Diagnosis & Resolution Log
           </label>
           <textarea
@@ -133,7 +133,7 @@ export function TicketStatusUpdater({
             disabled={loading}
             rows={3}
             placeholder="e.g. Tightened terminal wiring, replaced 16A socket and verified earthing voltage."
-            className="w-full text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
+            className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
           />
         </div>
 
@@ -162,19 +162,19 @@ export function TicketStatusUpdater({
         </button>
 
         {errorMsg && (
-          <p className="text-[11px] text-rose-600 text-center font-medium">
+          <p className="text-[11px] text-rose-600 dark:text-rose-400 text-center font-medium">
             {errorMsg}
           </p>
         )}
       </form>
 
       {isResolved && (
-        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 space-y-1">
+        <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 text-xs text-emerald-800 dark:text-emerald-300 space-y-1">
           <span className="font-bold flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             Awaiting Student Verification
           </span>
-          <p className="text-[11px] text-emerald-700">
+          <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
             Marked resolved. Handover feedback gate is active in resident portal.
           </p>
         </div>

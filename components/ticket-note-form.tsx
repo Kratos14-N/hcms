@@ -65,15 +65,15 @@ export function TicketNoteForm({ complaintId, role }: TicketNoteFormProps) {
           disabled={loading}
           required
           placeholder={`Add internal ${role.toLowerCase()} inspection note...`}
-          className="flex-1 text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
+          className="flex-1 text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600 disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={loading}
           className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shrink-0 active:scale-95 disabled:cursor-not-allowed ${
             success
-              ? "bg-emerald-700 text-white"
-              : "bg-slate-900 hover:bg-slate-800 text-white"
+              ? "bg-emerald-700 dark:bg-emerald-600 text-white"
+              : "bg-slate-900 hover:bg-slate-800 dark:bg-teal-600 dark:hover:bg-teal-700 text-white"
           }`}
         >
           {loading ? (
@@ -88,7 +88,7 @@ export function TicketNoteForm({ complaintId, role }: TicketNoteFormProps) {
             </>
           ) : (
             <>
-              <Lock className="w-3.5 h-3.5 text-teal-400" />
+              <Lock className="w-3.5 h-3.5 text-teal-400 dark:text-teal-300" />
               <span>Log Note</span>
             </>
           )}
@@ -96,7 +96,7 @@ export function TicketNoteForm({ complaintId, role }: TicketNoteFormProps) {
       </div>
 
       {errorMsg && (
-        <p className="text-[11px] text-rose-600 font-medium">
+        <p className="text-[11px] text-rose-600 dark:text-rose-400 font-medium">
           {errorMsg}
         </p>
       )}

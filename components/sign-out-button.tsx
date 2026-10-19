@@ -25,9 +25,11 @@ export function SignOutButton() {
       clearCookie("userId");
       clearCookie("session");
 
-      window.location.assign("/login");
+      router.push("/login");
+      router.refresh();
     } catch {
-      window.location.assign("/login");
+      router.push("/login");
+      router.refresh();
     } finally {
       setIsLoggingOut(false);
     }
@@ -38,7 +40,7 @@ export function SignOutButton() {
       onClick={handleSignOut}
       disabled={isLoggingOut}
       title="Sign Out of HCMS"
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200/80 hover:border-rose-200 transition duration-200 cursor-pointer disabled:opacity-50"
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-slate-200/80 dark:border-slate-800 hover:border-rose-200 dark:hover:border-rose-800 transition duration-200 cursor-pointer disabled:opacity-50"
     >
       {isLoggingOut ? (
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
