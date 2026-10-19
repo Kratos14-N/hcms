@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { StudentHandoverVerifyBanner } from "@/components/student-handover-verify-banner";
 import { ComplaintLiveTime } from "@/components/complaint-live-time";
+import PortalLoading from "../portal/loading";
 
 export const instant = false;
 
@@ -72,31 +73,46 @@ async function PortalComplaintsContent({ searchParams }: PortalProps) {
   let allUserComplaints: ComplaintWithRelations[] = [];
 
   try {
-    studentUser = sessionUserId
-      ? await prisma.user.findUnique({
+    if (sessionUserId) {
+      const [userRecord, complaintsRecord] = await Promise.all([
+        prisma.user.findUnique({
           where: { id: sessionUserId },
-        })
-      : null;
+        }),
+        prisma.complaint.findMany({
+          where: { studentId: sessionUserId },
+          include: {
+            subCategory: {
+              include: { category: true },
+            },
+            worker: true,
+            feedback: true,
+            attachments: true,
+          },
+          orderBy: { createdAt: "desc" },
+        }),
+      ]);
+      studentUser = userRecord;
+      allUserComplaints = (complaintsRecord || []) as unknown as ComplaintWithRelations[];
+    }
 
     if (!studentUser) {
       studentUser = await prisma.user.findFirst({
         where: { role: Role.STUDENT },
       });
-    }
-
-    if (studentUser) {
-      allUserComplaints = (await prisma.complaint.findMany({
-        where: { studentId: studentUser.id },
-        include: {
-          subCategory: {
-            include: { category: true },
+      if (studentUser) {
+        allUserComplaints = (await prisma.complaint.findMany({
+          where: { studentId: studentUser.id },
+          include: {
+            subCategory: {
+              include: { category: true },
+            },
+            worker: true,
+            feedback: true,
+            attachments: true,
           },
-          worker: true,
-          feedback: true,
-          attachments: true,
-        },
-        orderBy: { createdAt: "desc" },
-      })) as unknown as ComplaintWithRelations[];
+          orderBy: { createdAt: "desc" },
+        })) as unknown as ComplaintWithRelations[];
+      }
     }
   } catch (dbErr) {
     console.warn("Portal database query warning:", dbErr);
@@ -434,14 +450,8 @@ async function PortalComplaintsContent({ searchParams }: PortalProps) {
 
 export default function PortalPage(props: PortalProps) {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center text-sm text-slate-400">
-          Loading resident tickets...
-        </div>
-      }
-    >
+    <Suspense fallback={<PortalLoading />}>
       <PortalComplaintsContent {...props} />
     </Suspense>
   );
-}
+}

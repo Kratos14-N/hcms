@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
@@ -194,7 +194,12 @@ export async function POST(request: Request) {
 
     // 1. Attempt database lookup & automatic registration with try/catch
     try {
-      if (userId) {
+      // Prioritize fast indexed email lookup first
+      if (email && !isPhoneLogin) {
+        user = await prisma.user.findUnique({
+          where: { email: email.trim().toLowerCase() },
+        });
+      } else if (userId) {
         user = await prisma.user.findUnique({ where: { id: userId } });
       }
 
@@ -237,27 +242,32 @@ export async function POST(request: Request) {
         }
       }
 
-      // Handle Email-based authentication
-      if (!user && email && !isPhoneLogin) {
-        user = await prisma.user.findUnique({
-          where: { email: email.trim().toLowerCase() },
-        });
+      // Non-blocking profile synchronization via after()
+      if (user && (name || roomNumber || blockAssigned || categoryExpertise || phone)) {
+        const userIdToUpdate = user.id;
+        const updateData = {
+          ...(name ? { name: name.trim() } : {}),
+          ...(roomNumber !== undefined ? { roomNumber: roomNumber?.trim() || null } : {}),
+          ...(blockAssigned !== undefined ? { blockAssigned: blockAssigned?.trim() || null } : {}),
+          ...(categoryExpertise !== undefined
+            ? { categoryExpertise: categoryExpertise?.trim() || null }
+            : {}),
+          ...(phone ? { phone: phone.trim() } : {}),
+        };
 
-        // Update fields if customized
-        if (user && (name || roomNumber || blockAssigned || categoryExpertise || phone)) {
-          user = await prisma.user.update({
-            where: { id: user.id },
-            data: {
-              ...(name ? { name: name.trim() } : {}),
-              ...(roomNumber !== undefined ? { roomNumber: roomNumber?.trim() || null } : {}),
-              ...(blockAssigned !== undefined ? { blockAssigned: blockAssigned?.trim() || null } : {}),
-              ...(categoryExpertise !== undefined
-                ? { categoryExpertise: categoryExpertise?.trim() || null }
-                : {}),
-              ...(phone ? { phone: phone.trim() } : {}),
-            },
-          });
-        }
+        // Optimistically apply to in-memory user response
+        user = { ...user, ...updateData };
+
+        after(async () => {
+          try {
+            await prisma.user.update({
+              where: { id: userIdToUpdate },
+              data: updateData,
+            });
+          } catch (updateErr) {
+            console.warn("Non-blocking profile sync error:", updateErr);
+          }
+        });
       }
 
       // If user does not exist but email is provided, register them dynamically!

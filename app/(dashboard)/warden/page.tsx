@@ -14,6 +14,7 @@ import {
   BarChart3,
   CheckCircle2,
 } from "lucide-react";
+import AgentLoading from "../agent/loading";
 
 interface PageProps {
   searchParams: Promise<{ filter?: string }>;
@@ -31,17 +32,6 @@ async function AgentQueueContent({
     cookieStore.get("hcms_user_id")?.value ||
     cookieStore.get("userId")?.value;
 
-  let currentWarden = null;
-  try {
-    if (sessionUserId) {
-      currentWarden = await prisma.user.findUnique({
-        where: { id: sessionUserId },
-      });
-    }
-  } catch (err) {
-    console.warn("Warden query warning:", err);
-  }
-
   type AgentTicket = Prisma.ComplaintGetPayload<{
     include: {
       subCategory: { include: { category: true } };
@@ -50,8 +40,10 @@ async function AgentQueueContent({
     };
   }>;
 
+  let currentWarden = null;
   let statusGroups: Array<{ priority: Priority; status: ComplaintStatus; _count: { _all: number } }> = [];
   let tickets: AgentTicket[] = [];
+
 
   const whereClause: Prisma.ComplaintWhereInput = {};
   if (filter === "EMERGENCY") {
@@ -72,20 +64,27 @@ async function AgentQueueContent({
   }
 
   try {
-    statusGroups = (await prisma.complaint.groupBy({
-      by: ["status", "priority"],
-      _count: { _all: true },
-    })) as unknown as typeof statusGroups;
-
-    tickets = (await prisma.complaint.findMany({
-      where: whereClause,
-      include: {
-        subCategory: { include: { category: true } },
-        worker: true,
-        student: true,
-      },
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-    })) as unknown as typeof tickets;
+    const [wardenRes, groupsRes, ticketsRes] = await Promise.all([
+      sessionUserId
+        ? prisma.user.findUnique({ where: { id: sessionUserId } })
+        : Promise.resolve(null),
+      prisma.complaint.groupBy({
+        by: ["status", "priority"],
+        _count: { _all: true },
+      }),
+      prisma.complaint.findMany({
+        where: whereClause,
+        include: {
+          subCategory: { include: { category: true } },
+          worker: true,
+          student: true,
+        },
+        orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      }),
+    ]);
+    currentWarden = wardenRes;
+    statusGroups = groupsRes as unknown as typeof statusGroups;
+    tickets = ticketsRes as unknown as typeof tickets;
   } catch (err) {
     console.warn("Agent queue database query warning:", err);
   }
@@ -316,14 +315,8 @@ async function AgentQueueContent({
 
 export default async function AgentPage(props: PageProps) {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] flex items-center justify-center text-sm text-slate-400 dark:text-slate-500">
-          Loading warden triage desk...
-        </div>
-      }
-    >
+    <Suspense fallback={<AgentLoading />}>
       <AgentQueueContent searchParams={props.searchParams} />
     </Suspense>
   );
-}
+}
