@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { TopProgressBar } from "@/components/top-progress-bar";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -66,6 +67,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} min-h-screen antialiased text-slate-900 dark:text-slate-100 bg-[#F4F7F6] dark:bg-[#0B0F17] transition-colors duration-200`} suppressHydrationWarning>
+        <TopProgressBar />
         {children}
       </body>
     </html>

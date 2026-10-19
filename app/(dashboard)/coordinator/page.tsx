@@ -15,6 +15,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+export const instant = false;
+
 interface PageProps {
   searchParams: Promise<{ filter?: string }>;
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export const instant = false;
 
+
 export async function POST() {
   const response = NextResponse.json({
     success: true,

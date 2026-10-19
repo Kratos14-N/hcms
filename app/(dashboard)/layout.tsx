@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Role, User } from "@prisma/client";
 import { Sparkles, Building2, Wrench, Shield, ShieldCheck } from "lucide-react";
 import { SignOutButton } from "@/components/sign-out-button";
 import { LiveClock } from "@/components/live-clock";
 import { ThemeToggle } from "@/components/theme-toggle";
-
-export const instant = false;
+import { RefreshButton } from "@/components/refresh-button";
+import { DashboardNavLinks } from "@/components/dashboard-nav-links";
 
 function resolveRole(roleStr?: string): Role {
   if (!roleStr) return Role.STUDENT;
@@ -26,12 +25,13 @@ function resolveRole(roleStr?: string): Role {
   return Role.STUDENT;
 }
 
+export const instant = false;
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await connection();
 
   const cookieStore = await cookies();
   const rawRole =
@@ -220,23 +220,15 @@ export default async function DashboardLayout({
               </div>
             </Link>
 
-            {/* Role-isolated nav items */}
-            <nav className="flex items-center gap-1 overflow-x-auto no-scrollbar py-1">
-              {navLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition duration-150 whitespace-nowrap"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            {/* Role-isolated nav items with active indicators */}
+            <DashboardNavLinks links={navLinks} />
           </div>
 
-          {/* Right Header Identity, Clock, Theme Toggle & Sign Out */}
+          {/* Right Header Identity, Clock, Refresh Button, Theme Toggle & Sign Out */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Live Refresh/Sync Button */}
+            <RefreshButton />
+
             {/* Live Clock */}
             <LiveClock />
 

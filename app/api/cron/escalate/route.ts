@@ -4,6 +4,7 @@ import { ComplaintStatus, Priority } from "@prisma/client";
 
 export const instant = false;
 
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const forceTest = searchParams.get("forceTest") === "true";

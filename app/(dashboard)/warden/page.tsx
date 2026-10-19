@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import AgentLoading from "../agent/loading";
 
+export const instant = false;
+
 interface PageProps {
   searchParams: Promise<{ filter?: string }>;
 }
