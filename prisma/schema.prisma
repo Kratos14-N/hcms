@@ -56,9 +56,6 @@ model User {
   assignedTasks     Complaint[]    @relation("WorkerComplaints")
   auditLogs         AuditLog[]
   messages          ChatMessage[]
-
-  @@index([role])
-  @@index([phone])
 }
 
 model Category {
