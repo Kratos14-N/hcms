@@ -206,62 +206,53 @@ export default function LoginPage() {
     // Immediate optimistic cookie stamping
     setClientCookies(estimatedRole, effectiveUserId);
 
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+    // Navigate immediately to avoid blocking on API response
+    router.push(defaultRedirect);
 
-      const payload =
-        authMode === "register"
-          ? {
-              email: regRole === "WORKER" && isPhoneLogin ? undefined : activeEmail,
-              phone: isPhoneLogin ? activeEmail : undefined,
-              identifier: activeEmail,
-              name: regName.trim(),
-              role: regRole,
-              roomNumber: regRole === "STUDENT" ? regRoomNumber.trim() : undefined,
-              blockAssigned:
-                regRole === "STUDENT" || regRole === "WARDEN"
-                  ? regBlockAssigned.trim()
-                  : undefined,
-              categoryExpertise: regRole === "WORKER" ? regTrade.trim() : undefined,
-            }
-          : {
-              email: activeEmail,
-              phone: isPhoneLogin ? activeEmail : demoMatch?.phone || undefined,
-              identifier: activeEmail,
-              role: estimatedRole,
-              userId: effectiveUserId,
-            };
+    const payload =
+      authMode === "register"
+        ? {
+            email: regRole === "WORKER" && isPhoneLogin ? undefined : activeEmail,
+            phone: isPhoneLogin ? activeEmail : undefined,
+            identifier: activeEmail,
+            name: regName.trim(),
+            role: regRole,
+            roomNumber: regRole === "STUDENT" ? regRoomNumber.trim() : undefined,
+            blockAssigned:
+              regRole === "STUDENT" || regRole === "WARDEN"
+                ? regBlockAssigned.trim()
+                : undefined,
+            categoryExpertise: regRole === "WORKER" ? regTrade.trim() : undefined,
+          }
+        : {
+            email: activeEmail,
+            phone: isPhoneLogin ? activeEmail : demoMatch?.phone || undefined,
+            identifier: activeEmail,
+            role: estimatedRole,
+            userId: effectiveUserId,
+          };
 
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      }).catch(() => null);
-
-      clearTimeout(timeoutId);
-
-      let targetUrl = defaultRedirect;
-      if (res && res.ok) {
-        const data = await res.json().catch(() => null);
-        if (data?.redirectUrl) {
-          targetUrl = data.redirectUrl;
+    // Parallel background synchronization
+    fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        if (res && res.ok) {
+          const data = await res.json().catch(() => null);
+          if (data?.user) {
+            setClientCookies(data.user.role, data.user.id);
+          }
+          if (data?.redirectUrl && data.redirectUrl !== defaultRedirect) {
+            router.push(data.redirectUrl);
+          }
         }
-        if (data?.user) {
-          setClientCookies(data.user.role, data.user.id);
-        }
-      }
-
-      router.push(targetUrl);
-      router.refresh();
-    } catch (err: unknown) {
-      console.warn("Authentication warning:", err);
-      router.push(defaultRedirect);
-      router.refresh();
-    } finally {
-      setTimeout(() => setIsLoading(false), 2000);
-    }
+      })
+      .catch(() => null)
+      .finally(() => {
+        setTimeout(() => setIsLoading(false), 800);
+      });
   };
 
   if (isLoading) {

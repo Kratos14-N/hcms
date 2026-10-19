@@ -17,6 +17,5 @@ declare const globalThis: {
 
 export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
-if (process.env.NODE_ENV !== "production") {
-  globalThis.prismaGlobal = prisma;
-}
+// Reuse client across warm serverless functions to avoid connection thrashing
+globalThis.prismaGlobal = prisma;
