@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 
@@ -243,19 +243,32 @@ export async function POST(request: Request) {
           where: { email: email.trim().toLowerCase() },
         });
 
-        // Update fields if customized
+        // Update fields asynchronously if customized without blocking return
         if (user && (name || roomNumber || blockAssigned || categoryExpertise || phone)) {
-          user = await prisma.user.update({
-            where: { id: user.id },
-            data: {
-              ...(name ? { name: name.trim() } : {}),
-              ...(roomNumber !== undefined ? { roomNumber: roomNumber?.trim() || null } : {}),
-              ...(blockAssigned !== undefined ? { blockAssigned: blockAssigned?.trim() || null } : {}),
-              ...(categoryExpertise !== undefined
-                ? { categoryExpertise: categoryExpertise?.trim() || null }
-                : {}),
-              ...(phone ? { phone: phone.trim() } : {}),
-            },
+          const userIdToUpdate = user.id;
+          const updateData = {
+            ...(name ? { name: name.trim() } : {}),
+            ...(roomNumber !== undefined ? { roomNumber: roomNumber?.trim() || null } : {}),
+            ...(blockAssigned !== undefined ? { blockAssigned: blockAssigned?.trim() || null } : {}),
+            ...(categoryExpertise !== undefined
+              ? { categoryExpertise: categoryExpertise?.trim() || null }
+              : {}),
+            ...(phone ? { phone: phone.trim() } : {}),
+          };
+
+          // Optimistically update in-memory object for immediate response
+          user = { ...user, ...updateData };
+
+          // Non-blocking database write via Next.js 16 after()
+          after(async () => {
+            try {
+              await prisma.user.update({
+                where: { id: userIdToUpdate },
+                data: updateData,
+              });
+            } catch (updateErr) {
+              console.warn("Non-blocking user profile sync failed:", updateErr);
+            }
           });
         }
       }
