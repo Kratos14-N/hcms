@@ -123,68 +123,68 @@ export default async function DashboardLayout({
   // Strict role-specific navigation links
   const navLinks = isStudent
     ? [
-        { label: "My Complaints", href: "/student" },
-        { label: "Lodge Request", href: "/student/requests/new" },
-        { label: "Campus Showcase", href: "/student/showcase" },
-      ]
+      { label: "My Complaints", href: "/student" },
+      { label: "Lodge Request", href: "/student/requests/new" },
+      { label: "Campus Showcase", href: "/student/showcase" },
+    ]
     : isWorker
-    ? [
+      ? [
         { label: "Assigned Work Orders", href: "/worker" },
       ]
-    : isWarden
-    ? [
-        { label: "Triage Queue", href: "/warden" },
-        { label: "Hostel Radar", href: "/warden/surveillance" },
-        { label: "SLA Analytics", href: "/warden/analytics" },
-        { label: "Staff Portfolio", href: "/worker" },
-      ]
-    : [
-        { label: "Operations Queue", href: "/coordinator" },
-        { label: "Campus Radar", href: "/coordinator/surveillance" },
-        { label: "SLA Analytics", href: "/coordinator/analytics" },
-        { label: "Staff Portfolio", href: "/worker" },
-      ];
+      : isWarden
+        ? [
+          { label: "Triage Queue", href: "/warden" },
+          { label: "Hostel Radar", href: "/warden/surveillance" },
+          { label: "SLA Analytics", href: "/warden/analytics" },
+          { label: "Staff Portfolio", href: "/worker" },
+        ]
+        : [
+          { label: "Operations Queue", href: "/coordinator" },
+          { label: "Campus Radar", href: "/coordinator/surveillance" },
+          { label: "SLA Analytics", href: "/coordinator/analytics" },
+          { label: "Staff Portfolio", href: "/worker" },
+        ];
 
   const homeHref = isStudent
     ? "/student"
     : isWorker
-    ? "/worker"
-    : isWarden
-    ? "/warden"
-    : "/coordinator";
+      ? "/worker"
+      : isWarden
+        ? "/warden"
+        : "/coordinator";
 
   // Role visual accents
   const roleTheme = isStudent
     ? {
-        badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
-        avatarGrad: "from-blue-600 to-indigo-600",
-        label: "Resident Student",
-        extraInfo: user.roomNumber ? `Room ${user.roomNumber}` : user.blockAssigned || "Hostel Resident",
-        icon: Building2,
-      }
+      badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
+      avatarGrad: "from-blue-600 to-indigo-600",
+      label: "Resident Student",
+      extraInfo: user.roomNumber ? `Room ${user.roomNumber}` : user.blockAssigned || "Hostel Resident",
+      icon: Building2,
+    }
     : isWorker
-    ? {
+      ? {
         badgeBg: "bg-amber-50 text-amber-700 border-amber-200",
         avatarGrad: "from-amber-500 to-orange-600",
         label: "Field Technician",
         extraInfo: user.categoryExpertise ? `${user.categoryExpertise} Maintenance` : "Facility Support",
         icon: Wrench,
       }
-    : isWarden
-    ? {
-        badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
-        avatarGrad: "from-indigo-600 to-violet-600",
-        label: "Hostel Warden",
-        extraInfo: user.blockAssigned ? `${user.blockAssigned} Admin` : "Warden In-charge",
-        icon: Shield,
-      }
-    : {
-        badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
-        avatarGrad: "from-purple-600 to-pink-600",
-        label: "Coordinator Admin",
-        extraInfo: "Campus Operations",
-        icon: ShieldCheck,
-      };
+      : isWarden
+        ? {
+          badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
+          avatarGrad: "from-indigo-600 to-violet-600",
+          label: "Hostel Warden",
+          extraInfo: user.blockAssigned ? `${user.blockAssigned} Admin` : "Warden In-charge",
+          icon: Shield,
+        }
+        : {
+          badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
+          avatarGrad: "from-purple-600 to-pink-600",
+          label: "Coordinator Admin",
+          extraInfo: "Campus Operations",
+          icon: ShieldCheck,
+        };
 
   const initials = user.name
     .split(" ")

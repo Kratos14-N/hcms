@@ -131,11 +131,10 @@ export function RadarTriageControl({
         <button
           type="submit"
           disabled={loading}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer active:scale-95 disabled:cursor-not-allowed ${
-            success
-              ? "bg-emerald-600 text-white"
-              : "bg-[#0071e3] hover:bg-[#0077ed] text-white"
-          }`}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer active:scale-95 disabled:cursor-not-allowed ${success
+            ? "bg-emerald-600 text-white"
+            : "bg-[#0071e3] hover:bg-[#0077ed] text-white"
+            }`}
         >
           {loading ? (
             <>

@@ -112,9 +112,8 @@ async function SurveillanceContent() {
               return (
                 <div
                   key={item.id}
-                  className={`p-5 sm:p-6 transition flex flex-col lg:flex-row lg:items-center justify-between gap-6 ${
-                    item.emergencyFlag ? "bg-rose-50/30" : "hover:bg-[#fbfbfd]"
-                  }`}
+                  className={`p-5 sm:p-6 transition flex flex-col lg:flex-row lg:items-center justify-between gap-6 ${item.emergencyFlag ? "bg-rose-50/30" : "hover:bg-[#fbfbfd]"
+                    }`}
                 >
                   {/* Left Column: Identifiers & Issue */}
                   <div className="space-y-2 max-w-xl">
@@ -128,11 +127,10 @@ async function SurveillanceContent() {
                         </span>
                       )}
                       <span
-                        className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
-                          isBreached
+                        className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${isBreached
                             ? "bg-rose-100 text-rose-700 font-bold"
                             : "bg-amber-100 text-amber-800"
-                        }`}
+                          }`}
                       >
                         {isBreached
                           ? "SLA BREACHED"
