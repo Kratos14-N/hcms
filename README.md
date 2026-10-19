@@ -1,7 +1,18 @@
 # 🏢 HCMS — Hostel Complaint & Facility Management System
 
+<p align="left">
+  <img src="https://img.shields.io/badge/Next.js-16.4_Turbopack-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js 16" />
+  <img src="https://img.shields.io/badge/React-19.3_Concurrent-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0_Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-v4_Design_System-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" />
+  <img src="https://img.shields.io/badge/Prisma-6.19_ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma ORM" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/SLA_Engine-2--Hour_Emergency-10B981?style=for-the-badge" alt="SLA Engine" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="MIT License" />
+</p>
+
 > **Enterprise SaaS Maintenance & SLA Dispatch Desk for Modern Residential Campuses**  
-> Built with Next.js 16 (App Router & Turbopack), React 19, Tailwind CSS v4, Prisma ORM, and PostgreSQL.
+> Engineered with Next.js 16 (App Router & Turbopack), React 19, Tailwind CSS v4, Prisma ORM, and PostgreSQL.
 
 ---
 
@@ -233,7 +244,7 @@ hcms/
 
 ### 2. Clone and Install Dependencies
 ```bash
-git clone https://github.com/your-org/hcms.git
+git clone https://github.com/Kratos14-N/hcms.git
 cd hcms
 npm install
 ```
@@ -336,7 +347,7 @@ stateDiagram-v2
 ## 📄 License & Credits
 
 * **Project**: HCMS (Hostel Complaint Management System)
-* **Author / Team**: Arya Operations & Campus Engineering Desk
+* **Author / Maintainer**: [Kratos14-N](https://github.com/Kratos14-N)
 * **License**: MIT Open Source License — feel free to customize and deploy for your campus or housing society!
 
 ---
