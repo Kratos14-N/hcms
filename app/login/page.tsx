@@ -22,6 +22,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import PortalLoading from "../(dashboard)/portal/loading";
+import AgentLoading from "../(dashboard)/agent/loading";
 
 type RoleType = "STUDENT" | "WARDEN" | "WORKER" | "COORDINATOR";
 
@@ -118,6 +120,7 @@ export default function LoginPage() {
   const [regTrade, setRegTrade] = useState<string>("ELECTRICAL");
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [transitionRole, setTransitionRole] = useState<RoleType>("STUDENT");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const selectedDemo = DEMO_ACCOUNTS.find(
@@ -183,6 +186,8 @@ export default function LoginPage() {
       : isCoordEmail
       ? "COORDINATOR"
       : "STUDENT";
+
+    setTransitionRole(estimatedRole);
 
     const defaultRedirect =
       estimatedRole === "STUDENT"
@@ -256,6 +261,37 @@ export default function LoginPage() {
       setTimeout(() => setIsLoading(false), 2000);
     }
   };
+
+  if (isLoading) {
+    const isWarden = transitionRole === "WARDEN";
+    return (
+      <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+        <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-[#111726]/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800 shadow-xs">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-blue-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/25">
+                <Sparkles className="w-4 h-4 animate-spin" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white">HCMS</span>
+                <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 tracking-wider uppercase -mt-0.5">
+                  Loading Dashboard...
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Authenticating Session</span>
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {isWarden ? <AgentLoading /> : <PortalLoading />}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0B0F17] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-indigo-500 selection:text-white transition-colors duration-200">
